@@ -4,8 +4,10 @@ QT += core \
     gui \
     sql \
     network
-HEADERS += src/archiver.h
-SOURCES += src/archiver.cpp \
+HEADERS += src/mboximporter.h \
+    src/archiver.h
+SOURCES += src/mboximporter.cpp \
+    src/archiver.cpp \
     src/main.cpp
 FORMS += src/archiver.ui
 RESOURCES += 
