@@ -29,6 +29,12 @@ std::size_t MBoxImporter::parse(QFile& mboxFile)
   QString line;
   std::vector<MBoxMessage> messages;
 
+  qint64 fileSize = mboxFile.size();
+  qint64 bytesRead = 0;
+  int pctDone = 0;
+
+  emit progress(pctDone);
+
   MBoxMessage currentMessage;
   bool finishedHeaders = false;
 
@@ -62,6 +68,14 @@ std::size_t MBoxImporter::parse(QFile& mboxFile)
       if (finishedHeaders) {
         currentMessage.body += line + '\n';
       }
+    }
+
+    bytesRead += line.size();
+    int newPctDone = (bytesRead * 100) / fileSize;
+
+    if (newPctDone != pctDone) {
+      pctDone = newPctDone;
+      emit progress(pctDone);
     }
   }
 

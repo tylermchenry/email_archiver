@@ -22,8 +22,20 @@ void Archiver::doTest()
 
   if (mboxFilename != "") {
     QFile mboxFile(mboxFilename);
+    MBoxImporter importer;
+
     mboxFile.open(QIODevice::ReadOnly);
-    std::size_t messagesFound = MBoxImporter().parse(mboxFile);
+    ui.prbProcessing->setRange(0, 100);
+    ui.prbProcessing->reset();
+
+    connect(&importer, SIGNAL(progress(int)), ui.prbProcessing, SLOT(setValue(int)));
+
+    std::size_t messagesFound = importer.parse(mboxFile);
+
+    disconnect(&importer, SIGNAL(progress(int)), ui.prbProcessing, SLOT(setValue(int)));
+
+    ui.prbProcessing->setValue(100);
+
     QMessageBox::information(this, "Email Archiver", "Found " + QString().setNum(messagesFound) +
                              " messages.");
   }

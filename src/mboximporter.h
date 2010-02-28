@@ -9,12 +9,15 @@
 #ifndef MBOXIMPORTER_H_
 #define MBOXIMPORTER_H_
 
+#include <QObject>
 #include <QString>
 #include <QFile>
 #include <map>
 
-class MBoxImporter
+class MBoxImporter : public QObject
 {
+    Q_OBJECT
+
   public:
 
     // Temporary
@@ -28,6 +31,11 @@ class MBoxImporter
     virtual ~MBoxImporter();
 
     std::size_t parse(QFile& mboxFile);
+
+  signals:
+
+    void progress(int percentDone);
+
 };
 
 #endif /* MBOXIMPORTER_H_ */
