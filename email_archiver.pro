@@ -4,7 +4,8 @@ QT += core \
     gui \
     sql \
     network
-HEADERS += 
-SOURCES += src/main.cpp
-FORMS += 
+HEADERS += src/archiver.h
+SOURCES += src/archiver.cpp \
+    src/main.cpp
+FORMS += src/archiver.ui
 RESOURCES += 
