@@ -4,7 +4,7 @@
 #include <QFileDialog>
 
 Archiver::Archiver(QWidget *parent)
-    : QDialog(parent)
+    : QDialog(parent), model(this)
 {
   ui.setupUi(this);
   connect(ui.btnTest, SIGNAL(clicked()), this, SLOT(doTest()));
@@ -28,15 +28,22 @@ void Archiver::doTest()
     ui.prbProcessing->setRange(0, 100);
     ui.prbProcessing->reset();
 
-    connect(&importer, SIGNAL(progress(int)), ui.prbProcessing, SLOT(setValue(int)));
+    connect(&importer, SIGNAL(progress(int)),
+             ui.prbProcessing, SLOT(setValue(int)));
 
-    std::size_t messagesFound = importer.parse(mboxFile);
+    connect(&importer, SIGNAL(newMessage(const MailMessage&)),
+             &model, SLOT(addMessage(const MailMessage&)));
 
-    disconnect(&importer, SIGNAL(progress(int)), ui.prbProcessing, SLOT(setValue(int)));
+    importer.parse(mboxFile);
+
+    disconnect(&importer, SIGNAL(newMessage(const MailMessage&)),
+                &model, SLOT(addMessage(const MailMessage&)));
+
+    disconnect(&importer, SIGNAL(progress(int)),
+                ui.prbProcessing, SLOT(setValue(int)));
 
     ui.prbProcessing->setValue(100);
-
-    QMessageBox::information(this, "Email Archiver", "Found " + QString().setNum(messagesFound) +
-                             " messages.");
+    ui.tblMessages->setModel(&model);
   }
 }
+

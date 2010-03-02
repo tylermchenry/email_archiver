@@ -3,13 +3,14 @@
 
 #include <QtGui/QDialog>
 #include "ui_archiver.h"
+#include "messagemodel.h"
 
 class Archiver: public QDialog
 {
   Q_OBJECT
 
   public:
-    Archiver(QWidget *parent = 0);
+    Archiver(QWidget *parent = NULL);
     ~Archiver();
 
   public slots:
@@ -17,7 +18,9 @@ class Archiver: public QDialog
     void doTest();
 
   private:
+
     Ui::ArchiverClass ui;
+    MessageModel model;
 };
 
 #endif // ARCHIVER_H

@@ -9,10 +9,10 @@
 #ifndef MBOXIMPORTER_H_
 #define MBOXIMPORTER_H_
 
+#include "mailmessage.h"
 #include <QObject>
 #include <QString>
 #include <QFile>
-#include <map>
 
 class MBoxImporter : public QObject
 {
@@ -20,21 +20,15 @@ class MBoxImporter : public QObject
 
   public:
 
-    // Temporary
-    struct MBoxMessage {
-      QString from;
-      std::map<QString, QString> headers;
-      QString body;
-    };
-
     MBoxImporter();
     virtual ~MBoxImporter();
 
-    std::size_t parse(QFile& mboxFile);
+    void parse(QFile& mboxFile);
 
   signals:
 
     void progress(int percentDone);
+    void newMessage(const MailMessage& message);
 
 };
 
