@@ -31,9 +31,9 @@ class MessageModel : public QAbstractTableModel
 
     virtual QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
 
-    void clear();
-
   public slots:
+
+    void clear();
 
     void addMessage(const MailMessage& message);
 

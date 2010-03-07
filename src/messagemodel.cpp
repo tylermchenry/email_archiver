@@ -61,35 +61,43 @@ QVariant MessageModel::headerData(int section, Qt::Orientation orientation,
 
 QVariant MessageModel::data(const QModelIndex& index, int role) const
 {
-  const MailMessage& message = messages[index.row()];
-
   if (role == Qt::DisplayRole) {
-    switch(index.column())
-    {
-      case 0:
-        return message.getMessageId();
-      case 1:
-        return message.getTo();
-      case 2:
-        return message.getFrom();
-      case 3:
-        return message.getSubject();
-      case 4:
-        return message.getBody()[0]; // First line of body
-      default:
-        return "";
+    if (index.row() < messages.size()) {
+      const MailMessage& message = messages[index.row()];
+      switch(index.column())
+      {
+        case 0:
+          return message.getMessageId();
+        case 1:
+          return message.getTo();
+        case 2:
+          return message.getFrom();
+        case 3:
+          return message.getSubject();
+        case 4:
+          if (message.getBody().size() > 0) {
+            return message.getBody()[0]; // First line of body
+          } else {
+            return "";
+          }
+      }
     }
-  } else {
-    return QVariant();
   }
+
+  return QVariant();
 }
 
 void MessageModel::clear()
 {
+  beginRemoveRows(QModelIndex(), messages.size(), messages.size());
   messages.clear();
+  endRemoveRows();
+  reset();
 }
 
 void MessageModel::addMessage(const MailMessage& message)
 {
+  beginInsertRows(QModelIndex(), messages.size(), messages.size());
   messages.push_back(message);
+  endInsertRows();
 }

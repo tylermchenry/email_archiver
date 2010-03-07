@@ -8,6 +8,10 @@ Archiver::Archiver(QWidget *parent)
 {
   ui.setupUi(this);
   connect(ui.btnTest, SIGNAL(clicked()), this, SLOT(doTest()));
+  ui.tblMessages->setModel(&model);
+  connect(&model, SIGNAL(rowsInserted(const QModelIndex&, int, int)),
+           ui.tblMessages, SLOT(scrollToBottom()));
+  connect(ui.btnClear, SIGNAL(clicked()), &model, SLOT(clear()));
 }
 
 Archiver::~Archiver()
@@ -34,6 +38,7 @@ void Archiver::doTest()
     connect(&importer, SIGNAL(newMessage(const MailMessage&)),
              &model, SLOT(addMessage(const MailMessage&)));
 
+    model.clear();
     importer.parse(mboxFile);
 
     disconnect(&importer, SIGNAL(newMessage(const MailMessage&)),
@@ -43,7 +48,6 @@ void Archiver::doTest()
                 ui.prbProcessing, SLOT(setValue(int)));
 
     ui.prbProcessing->setValue(100);
-    ui.tblMessages->setModel(&model);
   }
 }
 
