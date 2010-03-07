@@ -34,8 +34,9 @@ int MessageModel::columnCount(const QModelIndex& parent) const
 QVariant MessageModel::headerData(int section, Qt::Orientation orientation,
                                       int role) const
 {
-  if (orientation == Qt::Horizontal) {
-    switch(section)
+  if (role == Qt::DisplayRole) {
+    if (orientation == Qt::Horizontal) {
+      switch(section)
       {
         case 0:
           return "Message ID";
@@ -50,8 +51,11 @@ QVariant MessageModel::headerData(int section, Qt::Orientation orientation,
         default:
           return "";
       }
+    } else {
+      return section;
+    }
   } else {
-    return section;
+    return QVariant();
   }
 }
 
@@ -59,7 +63,8 @@ QVariant MessageModel::data(const QModelIndex& index, int role) const
 {
   const MailMessage& message = messages[index.row()];
 
-  switch(index.column())
+  if (role == Qt::DisplayRole) {
+    switch(index.column())
     {
       case 0:
         return message.getMessageId();
@@ -74,6 +79,9 @@ QVariant MessageModel::data(const QModelIndex& index, int role) const
       default:
         return "";
     }
+  } else {
+    return QVariant();
+  }
 }
 
 void MessageModel::clear()
