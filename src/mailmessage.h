@@ -25,7 +25,7 @@ class MailMessage
 
     virtual ~MailMessage();
 
-    inline std::vector<QString> getBody() const
+    inline const std::vector<QString>& getBody() const
     {
         return body;
     }
@@ -48,7 +48,7 @@ class MailMessage
 
     std::vector<QString> getMultiHeader(const QString& field) const;
 
-    inline std::multimap<QString, QString> getHeaders() const
+    inline const std::multimap<QString, QString>& getHeaders() const
     {
         return headers;
     }
