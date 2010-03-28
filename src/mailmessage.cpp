@@ -14,37 +14,68 @@ MailMessage MailMessage::parseRFC2822(const std::vector<QString>& lines)
   MailMessage message;
   bool finishedHeaders = false;
 
+  QString* prevSpecialHeader;
+  std::multimap<QString, QString>::iterator  prevOtherHeader;
+
   for (std::vector<QString>::const_iterator i = lines.begin();
        i != lines.end(); ++i)
 
   {
     if (!finishedHeaders) {
 
-      int delimiter_pos = i->indexOf(':');
-
-      if (delimiter_pos == 0) {
+      if (i->length() == 0) {
         finishedHeaders = true;
       } else {
-        QString field = i->left(delimiter_pos);
-        QString value = i->right(i->size() - delimiter_pos - 1);
+        int delimiter_pos = i->indexOf(':');
 
-        if (field.toLower() == "to") {
-          message.to = value;
-        } else if (field.toLower() == "from") {
-          message.from = value;
-        } else if (field.toLower() == "subject") {
-          message.subject = value;
-        } else if (field.toLower() == "message-id") {
-          message.messageId = value;
+        if (delimiter_pos == 0) {
+
+          // Continuation of previous header; collapse leading whitespace
+
+          int begin_pos = 0;
+
+          while ((*i)[begin_pos] == ' ' || (*i)[begin_pos] == '\t') ++begin_pos;
+
+          if (prevSpecialHeader) {
+            prevSpecialHeader->append(" " + i->right(i->size() - begin_pos));
+          } else if (prevOtherHeader != message.otherHeaders.end()) {
+            prevOtherHeader->second.append(" " + i->right(i->size() - begin_pos));
+          }
+
         } else {
-          message.otherHeaders.insert
-            (std::map<QString, QString>::value_type(field, value));
+
+          // New header
+
+          prevSpecialHeader = NULL;
+          prevOtherHeader = message.otherHeaders.end();
+
+          QString field = i->left(delimiter_pos);
+          QString value = i->right(i->size() - delimiter_pos - 1);
+
+          if (field.toLower() == "to") {
+            message.to = value;
+            prevSpecialHeader = &(message.to);
+          } else if (field.toLower() == "from") {
+            message.from = value;
+            prevSpecialHeader = &(message.from);
+          } else if (field.toLower() == "subject") {
+            message.subject = value;
+            prevSpecialHeader = &(message.subject);
+          } else if (field.toLower() == "message-id") {
+            message.messageId = value;
+            prevSpecialHeader = &(message.messageId);
+          } else {
+            prevOtherHeader = message.otherHeaders.insert
+                (std::map<QString, QString>::value_type(field, value));
+          }
         }
       }
     }
 
     if (finishedHeaders) {
-      message.body.push_back(*i);
+      if (!message.body.empty() || i->length() > 0) {
+        message.body.push_back(*i);
+      }
     }
   }
 
