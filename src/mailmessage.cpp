@@ -14,8 +14,7 @@ MailMessage MailMessage::parseRFC2822(const std::vector<QString>& lines)
   MailMessage message;
   bool finishedHeaders = false;
 
-  QString* prevSpecialHeader;
-  std::multimap<QString, QString>::iterator  prevOtherHeader;
+  std::multimap<QString, QString>::iterator prevHeader = message.headers.end();
 
   for (std::vector<QString>::const_iterator i = lines.begin();
        i != lines.end(); ++i)
@@ -36,38 +35,19 @@ MailMessage MailMessage::parseRFC2822(const std::vector<QString>& lines)
 
           while ((*i)[begin_pos] == ' ' || (*i)[begin_pos] == '\t') ++begin_pos;
 
-          if (prevSpecialHeader) {
-            prevSpecialHeader->append(" " + i->right(i->size() - begin_pos));
-          } else if (prevOtherHeader != message.otherHeaders.end()) {
-            prevOtherHeader->second.append(" " + i->right(i->size() - begin_pos));
+          if (prevHeader != message.headers.end()) {
+            prevHeader->second.append(" " + i->right(i->size() - begin_pos));
           }
 
         } else {
 
           // New header
 
-          prevSpecialHeader = NULL;
-          prevOtherHeader = message.otherHeaders.end();
-
-          QString field = i->left(delimiter_pos);
+          QString field = i->left(delimiter_pos).toLower();
           QString value = i->right(i->size() - delimiter_pos - 1);
 
-          if (field.toLower() == "to") {
-            message.to = value;
-            prevSpecialHeader = &(message.to);
-          } else if (field.toLower() == "from") {
-            message.from = value;
-            prevSpecialHeader = &(message.from);
-          } else if (field.toLower() == "subject") {
-            message.subject = value;
-            prevSpecialHeader = &(message.subject);
-          } else if (field.toLower() == "message-id") {
-            message.messageId = value;
-            prevSpecialHeader = &(message.messageId);
-          } else {
-            prevOtherHeader = message.otherHeaders.insert
-                (std::map<QString, QString>::value_type(field, value));
-          }
+          prevHeader = message.headers.insert
+               (std::map<QString, QString>::value_type(field, value));
         }
       }
     }
@@ -105,4 +85,20 @@ MailMessage::~MailMessage()
 {
 }
 
+std::vector<QString> MailMessage::getMultiHeader(const QString& field) const
+{
+  std::vector<QString> mHeader;
+
+  std::pair<std::multimap<QString,QString>::const_iterator,
+            std::multimap<QString,QString>::const_iterator> range =
+                headers.equal_range(field.toLower());
+
+  for(std::multimap<QString,QString>::const_iterator i = range.first;
+      i != range.second; ++i)
+  {
+    mHeader.push_back(i->second);
+  }
+
+  return mHeader;
+}
 

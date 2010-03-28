@@ -32,37 +32,40 @@ class MailMessage
 
     inline QString getFrom() const
     {
-        return from;
+        return getHeader("From");
     }
 
     inline QString getMessageId() const
     {
-        return messageId;
+        return getHeader("Message-Id");
     }
 
-    inline std::multimap<QString, QString> getOtherHeaders() const
+    inline QString getHeader(const QString& field) const
     {
-        return otherHeaders;
+      std::multimap<QString, QString>::const_iterator i = headers.find(field.toLower());
+      return (i == headers.end()) ? QString() : i->second;
+    }
+
+    std::vector<QString> getMultiHeader(const QString& field) const;
+
+    inline std::multimap<QString, QString> getHeaders() const
+    {
+        return headers;
     }
 
     inline QString getSubject() const
     {
-        return subject;
+        return getHeader("Subject");
     }
 
     inline QString getTo() const
     {
-        return to;
+        return getHeader("To");
     }
 
 private:
 
-    QString messageId;
-    QString from;
-    QString to;
-    QString subject;
-
-    std::multimap<QString, QString> otherHeaders;
+    std::multimap<QString, QString> headers;
 
     std::vector<QString> body;
 };
