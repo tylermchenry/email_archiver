@@ -7,11 +7,11 @@
  */
 
 #include "messagemodel.h"
+#include <set>
 
 MessageModel::MessageModel(QObject* parent)
   : QAbstractTableModel(parent)
 {
-  // TODO Auto-generated constructor stub
 
 }
 
@@ -100,4 +100,16 @@ void MessageModel::addMessage(const MailMessage& message)
   beginInsertRows(QModelIndex(), messages.size(), messages.size());
   messages.push_back(message);
   endInsertRows();
+}
+
+void MessageModel::selectMessage(const QModelIndex& selected,
+                                      const QModelIndex& deselected)
+{
+  if (deselected.row() > 0 && deselected.row() < messages.size()) {
+    emit messageDeselected(messages[deselected.row()]);
+  }
+
+  if (selected.row() > 0 && selected.row() < messages.size()) {
+    emit messageSelected(messages[selected.row()]);
+  }
 }

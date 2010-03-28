@@ -9,9 +9,15 @@ Archiver::Archiver(QWidget *parent)
   ui.setupUi(this);
   connect(ui.btnTest, SIGNAL(clicked()), this, SLOT(doTest()));
   ui.tblMessages->setModel(&model);
+  ui.tblMessageDetails->setModel(&detailsModel);
   connect(&model, SIGNAL(rowsInserted(const QModelIndex&, int, int)),
            ui.tblMessages, SLOT(scrollToBottom()));
+  connect(&model, SIGNAL(messageSelected(const MailMessage&)),
+           &detailsModel, SLOT(setMessage(const MailMessage&)));
+  connect(ui.tblMessages->selectionModel(), SIGNAL(currentRowChanged(const QModelIndex&, const QModelIndex&)),
+          &model, SLOT(selectMessage(const QModelIndex&, const QModelIndex&)));
   connect(ui.btnClear, SIGNAL(clicked()), &model, SLOT(clear()));
+  connect(ui.btnClear, SIGNAL(clicked()), &detailsModel, SLOT(clear()));
 }
 
 Archiver::~Archiver()

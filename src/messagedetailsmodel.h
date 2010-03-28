@@ -1,28 +1,27 @@
 /*
- * messagemodel.h
+ * messagedetailsmodel.h
  * Part of email_archiver
  *
- *  Created on: Mar 1, 2010
+ *  Created on: Mar 28, 2010
  *      Author: Tyler McHenry <tyler@nerdland.net>
  */
 
-#ifndef MESSAGEMODEL_H_
-#define MESSAGEMODEL_H_
+#ifndef MESSAGEDETAILSMODEL_H_
+#define MESSAGEDETAILSMODEL_H_
 
 #include <QObject>
 #include <QAbstractTableModel>
-#include <QModelIndex>
 #include "mailmessage.h"
-#include <vector>
 
-class MessageModel : public QAbstractTableModel
+class MessageDetailsModel : public QAbstractTableModel
 {
-    Q_OBJECT
+  Q_OBJECT;
 
   public:
 
-    MessageModel(QObject* parent = NULL);
-    virtual ~MessageModel();
+    MessageDetailsModel(QObject* parent = NULL);
+
+    virtual ~MessageDetailsModel();
 
     virtual int rowCount(const QModelIndex& parent = QModelIndex()) const;
     virtual int columnCount(const QModelIndex& parent = QModelIndex()) const;
@@ -36,19 +35,11 @@ class MessageModel : public QAbstractTableModel
 
     void clear();
 
-    void addMessage(const MailMessage& message);
-
-    void selectMessage(const QModelIndex& current, const QModelIndex& previous);
-
-  signals:
-
-    void messageSelected(const MailMessage& message);
-
-    void messageDeselected(const MailMessage& message);
+    void setMessage(const MailMessage& message);
 
   private:
 
-    std::vector<MailMessage> messages;
+    MailMessage message;
 };
 
-#endif /* MESSAGEMODEL_H_ */
+#endif /* MESSAGEDETAILSMODEL_H_ */

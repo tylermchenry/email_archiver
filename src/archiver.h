@@ -4,6 +4,7 @@
 #include <QtGui/QDialog>
 #include "ui_archiver.h"
 #include "messagemodel.h"
+#include "messagedetailsmodel.h"
 
 class Archiver: public QDialog
 {
@@ -21,6 +22,7 @@ class Archiver: public QDialog
 
     Ui::ArchiverClass ui;
     MessageModel model;
+    MessageDetailsModel detailsModel;
 };
 
 #endif // ARCHIVER_H
