@@ -105,11 +105,11 @@ void MessageModel::addMessage(const MailMessage& message)
 void MessageModel::selectMessage(const QModelIndex& selected,
                                       const QModelIndex& deselected)
 {
-  if (deselected.row() > 0 && deselected.row() < messages.size()) {
+  if (deselected.row() >= 0 && deselected.row() < messages.size()) {
     emit messageDeselected(messages[deselected.row()]);
   }
 
-  if (selected.row() > 0 && selected.row() < messages.size()) {
+  if (selected.row() >= 0 && selected.row() < messages.size()) {
     emit messageSelected(messages[selected.row()]);
   }
 }
