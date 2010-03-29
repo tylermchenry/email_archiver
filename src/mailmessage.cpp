@@ -25,21 +25,29 @@ MailMessage MailMessage::parseRFC2822(const std::vector<QString>& lines)
       if (i->length() == 0) {
         finishedHeaders = true;
       } else {
-        int delimiter_pos = i->indexOf(':');
 
-        if (delimiter_pos == 0) {
+        if ((*i)[0] == ' ' || (*i)[0] == '\t') {
 
           // Continuation of previous header; collapse leading whitespace
 
           int begin_pos = 0;
 
-          while ((*i)[begin_pos] == ' ' || (*i)[begin_pos] == '\t') ++begin_pos;
+          // QString doesn't have an equivalent to find_first_not_of?
+          while (begin_pos < i->length() &&
+                 ((*i)[begin_pos] == ' ' || (*i)[begin_pos] == '\t'))
+          {
+            ++begin_pos;
+          }
 
-          if (prevHeader != message.headers.end()) {
-            prevHeader->second.append(" " + i->right(i->size() - begin_pos));
+          if (begin_pos < i->length()) {
+            if (prevHeader != message.headers.end()) {
+              prevHeader->second.append(" " + i->right(i->size() - begin_pos));
+            }
           }
 
         } else {
+
+          int delimiter_pos = i->indexOf(':');
 
           // New header
 
