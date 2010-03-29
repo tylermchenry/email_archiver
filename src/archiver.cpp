@@ -18,6 +18,7 @@ Archiver::Archiver(QWidget *parent)
           &model, SLOT(selectMessage(const QModelIndex&, const QModelIndex&)));
   connect(ui.btnClear, SIGNAL(clicked()), &model, SLOT(clear()));
   connect(ui.btnClear, SIGNAL(clicked()), &detailsModel, SLOT(clear()));
+  connect(ui.btnClear, SIGNAL(clicked()), ui.prbProcessing, SLOT(reset()));
 }
 
 Archiver::~Archiver()
@@ -35,6 +36,7 @@ void Archiver::doLoad()
     MBoxImporter importer;
 
     mboxFile.open(QIODevice::ReadOnly);
+    ui.prbProcessing->setEnabled(true);
     ui.prbProcessing->setRange(0, 100);
     ui.prbProcessing->reset();
 
@@ -54,6 +56,7 @@ void Archiver::doLoad()
                 ui.prbProcessing, SLOT(setValue(int)));
 
     ui.prbProcessing->setValue(100);
+    ui.prbProcessing->setEnabled(false);
   }
 }
 
