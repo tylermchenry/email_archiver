@@ -16,7 +16,7 @@ class Archiver: public QDialog
 
   public slots:
 
-    void doTest();
+    void doLoad();
 
   private:
 

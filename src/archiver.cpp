@@ -7,7 +7,7 @@ Archiver::Archiver(QWidget *parent)
     : QDialog(parent), model(this)
 {
   ui.setupUi(this);
-  connect(ui.btnTest, SIGNAL(clicked()), this, SLOT(doTest()));
+  connect(ui.btnLoad, SIGNAL(clicked()), this, SLOT(doLoad()));
   ui.tblMessages->setModel(&model);
   ui.tblMessageDetails->setModel(&detailsModel);
   connect(&model, SIGNAL(rowsInserted(const QModelIndex&, int, int)),
@@ -25,7 +25,7 @@ Archiver::~Archiver()
 
 }
 
-void Archiver::doTest()
+void Archiver::doLoad()
 {
   QString mboxFilename = QFileDialog::getOpenFileName
       (this, tr("Open MBox File"), "/home/tyler", tr("MBox Files (*.mbox)"));
