@@ -23,7 +23,7 @@ class MBoxImporter : public QObject
     MBoxImporter();
     virtual ~MBoxImporter();
 
-    void parse(QFile& mboxFile);
+    int parse(QFile& mboxFile);
 
   signals:
 

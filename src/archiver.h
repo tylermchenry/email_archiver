@@ -16,7 +16,8 @@ class Archiver: public QDialog
 
   public slots:
 
-    void doLoad();
+    void addMessage(const MailMessage& message);
+    void clear();
 
   private:
 

@@ -21,9 +21,10 @@ MBoxImporter::~MBoxImporter()
   // TODO Auto-generated destructor stub
 }
 
-void MBoxImporter::parse(QFile& mboxFile)
+int MBoxImporter::parse(QFile& mboxFile)
 {
   static const QString FROM_FIELD_PREFIX = "From ";
+  int messages = 0;
 
   QTextStream stream(&mboxFile);
   QString line;
@@ -41,6 +42,7 @@ void MBoxImporter::parse(QFile& mboxFile)
     if (line.startsWith(FROM_FIELD_PREFIX)) {
 
       if (!currentMessage.empty()) {
+        ++messages;
         emit newMessage(MailMessage::parseRFC2822(currentMessage));
         currentMessage.clear();
       }
@@ -57,4 +59,6 @@ void MBoxImporter::parse(QFile& mboxFile)
       emit progress(pctDone);
     }
   }
+
+  return messages;
 }
