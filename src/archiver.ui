@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
  <class>ArchiverClass</class>
- <widget class="QDialog" name="ArchiverClass">
+ <widget class="QWidget" name="ArchiverClass">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>634</width>
+    <width>637</width>
     <height>475</height>
    </rect>
   </property>

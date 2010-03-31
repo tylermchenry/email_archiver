@@ -4,16 +4,19 @@ QT += core \
     gui \
     sql \
     network
-HEADERS += src/messagedetailsmodel.h \
+HEADERS += src/archivermain.h \
+    src/messagedetailsmodel.h \
     src/messagemodel.h \
     src/mailmessage.h \
     src/mboximporter.h \
     src/archiver.h
-SOURCES += src/messagedetailsmodel.cpp \
+SOURCES += src/archivermain.cpp \
+    src/messagedetailsmodel.cpp \
     src/messagemodel.cpp \
     src/mailmessage.cpp \
     src/mboximporter.cpp \
     src/archiver.cpp \
     src/main.cpp
-FORMS += src/archiver.ui
+FORMS += src/archivermain.ui \
+    src/archiver.ui
 RESOURCES += 

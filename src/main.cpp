@@ -1,13 +1,13 @@
 #include <QtCore>
 #include <QApplication>
-#include "archiver.h"
+#include "archivermain.h"
 
 int main(int argc, char *argv[])
 {
   QApplication a(argc, argv);
-  Archiver mainDialog;
+  ArchiverMain mainWindow;
 
-  mainDialog.show();
+  mainWindow.show();
 
   return a.exec();
 }
